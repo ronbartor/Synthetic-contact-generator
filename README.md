@@ -15,10 +15,11 @@ In the CSV files the the entries are tabulated as above.
 In the TXT file they are complete contacts separated by a '\n'
 
 Usage:
->>>python main.py <number of entries required> <file format "csv" or "txt"> <number of entries per file>
+python main.py <number of entries required> <file format "csv" or "txt"> <number of entries per file>
   
 Example: python main.py 1000000 "csv" 10000
-  This will generate 1000000 contacts in 100 CSV files each containing 10000 contacts
+
+This will generate 1000000 contacts in 100 CSV files each containing 10000 contacts
   
 Note the _number of entries per file_ is used to ensure that the program does not generate massive files
   
