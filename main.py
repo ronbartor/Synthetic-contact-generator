@@ -2,10 +2,20 @@ import csv
 import sys
 from datetime import datetime
 import re
+import threading
 
 # Press ⌃R to execute it or replace it with your code.
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 import random
+
+#File Handles
+firstNames = ""
+lastNames = ""
+addresses = []
+companies = ""
+phoneNumbers = ""
+jobTitles = ""
+
 
 def main(argv):
     if len(sys.argv) != 4:
@@ -15,16 +25,29 @@ def main(argv):
         launch(int(contactNum),fType, fileSize)
         print("Good to go")
 
+    #Figureout how many entries per files are needed
+def getNumOfFilesNeeded(listSize, fSize):
+    numOfFiles = int(listSize) / int(fSize)
+    return int(numOfFiles)
+
 def generateEmail(first, last, company, suffix=".com"):
-    #strip white spacesß
-    fNameStr = "".join(first.split())
-    lNameStr = "".join(last.split())
-    companyStr = "".join(company.split())
+    #strip white spaces
+    fNameStr = "".join(str(first).split())
+    lNameStr = "".join(str(last).split())
+    companyStr = "".join(str(company).split())
     companyStr = re.sub('[().,*!@#$&/\']', '', companyStr)
     emailString = fNameStr+"."+lNameStr+"@"+companyStr+suffix
     return emailString
 
 def launch(listSize, fType,fSize):
+    # global references
+    global firstNames
+    global lastNames
+    global companies
+    global jobTitles
+    global addresses
+    global phoneNumbers
+
     # Use a breakpoint in the code line below to debug your script.
     #print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
     with open('firstNames.txt','r') as f:
@@ -32,7 +55,13 @@ def launch(listSize, fType,fSize):
     with open('lastNames.txt', 'r') as f:
         lastNames = f.readlines()
     with open('addresses.txt', 'r') as f:
-        addresses = f.readlines()
+        while True:
+            line1 = f.readline()
+            line2 = f.readline()
+            fullAddress = line1.strip('\n')+ " "+line2
+            addresses.append(fullAddress)
+            if not line2: break  # EOF
+        #addresses = f.readlines()
     with open('companies.txt', 'r') as f:
         companies = f.readlines()
     with open('phoneNumbers.txt', 'r') as f:
@@ -40,14 +69,6 @@ def launch(listSize, fType,fSize):
     with open('jobTitles.txt', 'r') as f:
         jobTitles = f.readlines()
 
-    #Generate random contacts
-    contact = ""
-    lname = ""
-
-    #Figureout how many entries per files are needed
-    def getFileSize():
-        numOfFiles = int(listSize) / int(fSize)
-        return int(numOfFiles)
 
     #prep the data
     firstName = ""
@@ -62,8 +83,9 @@ def launch(listSize, fType,fSize):
     now = datetime.now()
     print ("Start time: " + now.strftime("%H:%M:%S"))
 
-
-    for x in range (0,getFileSize()):
+    #spawnContacts(getNumOfFilesNeeded(listSize,fSize),fType,fSize)
+    ###
+    for x in range (0,getNumOfFilesNeeded(listSize,fSize)):
         fileName = "Contacts_" + str(x);
         if fType == "csv":
             fileName = fileName+".csv"
@@ -75,7 +97,7 @@ def launch(listSize, fType,fSize):
         else:
             fileName = fileName + ".txt"
             contactsFile = open(fileName, "a")
-        #Generate contacts
+       #Generate contacts
         for i in range(0, int(fSize)):
             firstName = random.choice(firstNames)
             lastName = random.choice(lastNames)
@@ -108,10 +130,9 @@ def launch(listSize, fType,fSize):
 
         contactsFile.close()
         i = 0
+        ###
     now = datetime.now()
     print("End time: " + now.strftime("%H:%M:%S"))
-
-
 
 
 
