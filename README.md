@@ -15,7 +15,7 @@ In the CSV files the the entries are tabulated as above.
 In the TXT file they are complete contacts separated by a '\n'
 
 Usage:
-python main.py <number of entries required> <file format "csv" or "txt"> <number of entries per file>
+python main.py  \<number of entries required>  \<file format "csv" or "txt">  \<number of entries per file>
   
 Example: python main.py 1000000 "csv" 10000
 
